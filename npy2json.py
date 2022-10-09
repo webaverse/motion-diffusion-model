@@ -10,6 +10,6 @@ s = json.dumps({
     'text': npy0['text'],
     'lengths': npy0['lengths'],
     'num_samples': npy0['num_samples'],
-    'num_repetitions': npy0['num_repetitions'],
+    'num_repetitions': npy0['num_repetitions']
 })
 print(s)
