@@ -105,13 +105,13 @@ Download the model(s) you wish to use, then unzip and place it in `./save/`. **F
 
 [humanml-decoder-with-emb-512](https://drive.google.com/file/d/1GnsW0K3UjuOkNkAWmjrGIUmeDDZrmPE5/view?usp=sharing)
 
-```
-gdown 1PE0PK8e5a5j-7-Xhs5YET5U5pGh0c821
-```
-
 **KIT**
 
 [kit-encoder-512](https://drive.google.com/file/d/1SHCRcE0es31vkJMLGf9dyLe7YsWj7pNL/view?usp=sharing)
+
+```
+gdown 1PE0PK8e5a5j-7-Xhs5YET5U5pGh0c821
+```
 
 ## Generate text-to-motion
 
