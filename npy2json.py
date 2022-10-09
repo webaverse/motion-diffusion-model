@@ -7,9 +7,9 @@ npy = numpy.load(filename, allow_pickle=True)
 npy0 = npy.item(0);
 s = json.dumps({
     'motion': npy0['motion'].tolist(),
-    'text': npy0['text'],
-    'lengths': npy0['lengths'],
-    'num_samples': npy0['num_samples'],
-    'num_repetitions': npy0['num_repetitions']
+    'text': npy0['text'].tolist(),
+    'lengths': npy0['lengths'].tolist(),
+    'num_samples': npy0['num_samples'].tolist(),
+    'num_repetitions': npy0['num_repetitions'].tolist(),
 })
 print(s)
