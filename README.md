@@ -42,6 +42,7 @@ For windows use [this](https://www.geeksforgeeks.org/how-to-install-ffmpeg-on-wi
 
 Setup conda env:
 ```shell
+conda config --set channel_priority false # needed to get around package conflict error
 conda env create -f environment.yml
 conda activate mdm
 python -m spacy download en_core_web_sm
