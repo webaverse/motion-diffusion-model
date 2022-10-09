@@ -30,6 +30,8 @@ This code was tested on `Ubuntu 18.04.5 LTS` and requires:
 * conda3 or miniconda3
 * CUDA capable GPU (one is enough)
 
+Note: AWS Ubuntu image that works is `amazon/Deep Learning AMI (Ubuntu 18.04) Version 64.4`
+
 ### 1. Setup environment
 
 Install ffmpeg (if not already installed):
@@ -42,7 +44,6 @@ For windows use [this](https://www.geeksforgeeks.org/how-to-install-ffmpeg-on-wi
 
 Setup conda env:
 ```shell
-conda config --set channel_priority false # needed to get around package conflict error
 conda env create -f environment.yml
 conda activate mdm
 python -m spacy download en_core_web_sm
