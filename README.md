@@ -22,6 +22,13 @@ If you find this code useful in your research, please cite:
 }
 ```
 
+## News
+
+📢 **9/Oct/22** - Added training and evaluation scripts. 
+  Note slight env changes adapting to the new code. If you already have an installed environment, run `bash prepare/download_glove.sh; pip install clearml` to adapt.
+
+📢 **6/Oct/22** - First release - sampling and rendering using pre-trained models.
+
 ## Getting started
 
 This code was tested on `Ubuntu 18.04.5 LTS` and requires:
@@ -50,13 +57,12 @@ python -m spacy download en_core_web_sm
 pip install git+https://github.com/openai/CLIP.git
 ```
 
-Download SMPL body model by running this script:
+Download dependencies:
 
 ```bash
 bash prepare/download_smpl_files.sh
+bash prepare/download_glove.sh
 ```
-This will download the SMPL neutral model from this [**github repo**](https://github.com/classner/up/blob/master/models/3D/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl) and additional files.
-
 
 
 ### 2. Get data
@@ -178,12 +184,35 @@ ETA - Nov 22
 
 ## Train your own MDM
 
-ETA - end of Oct 22
+**HumanML3D**
+```shell
+python -m train.train_mdm --save_dir save/my_humanml_trans_enc_512 --dataset humanml
+```
+
+**KIT**
+```shell
+python -m train.train_mdm --save_dir save/my_kit_trans_enc_512 --dataset kit
+```
+
+* Use `--device` to define GPU id.
+* Use `--arch` to choose one of the architectures reported in the paper `{trans_enc, trans_dec, gru}` (`trans_enc` is default).
+* Add `--train_platform_type {ClearmlPlatform, TensorboardPlatform}` to track results with either [ClearML](https://clear.ml/) or [Tensorboard](https://www.tensorflow.org/tensorboard).
+* Add `--eval_during_training` to run a short (90 minutes) evaluation for each saved checkpoint. 
+  This will slow down training but will give you better monitoring.
 
 ## Evaluate
+* Takes about 20 hours (on a single GPU)
+* The output of this script for the pre-trained models (as was reported in the paper) is provided in the checkpoints zip file.
 
-ETA - Nov 22
+**HumanML3D**
+```shell
+python -m eval.eval_humanml --model_path ./save/humanml_trans_enc_512/model000475000.pt
+```
 
+**KIT**
+```shell
+python -m eval.eval_humanml --model_path ./save/kit_trans_enc_512/model000400000.pt
+```
 
 
 ## Acknowledgments
