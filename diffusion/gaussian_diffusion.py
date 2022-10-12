@@ -157,7 +157,7 @@ class GaussianDiffusion:
                 self.lambda_vel_rcxyz > 0. or self.lambda_fc > 0.:
             assert self.loss_type == LossType.MSE, 'Geometric losses are supported by MSE loss type only!'
 
-        # Use float64 for accuracy.
+        # Use float64 for accuracy. Changed for mps support
         betas = np.array(betas, dtype=np.float64)
         self.betas = betas
         assert len(betas.shape) == 1, "betas must be 1-D"
@@ -1602,7 +1602,7 @@ def _extract_into_tensor(arr, timesteps, broadcast_shape):
                             dimension equal to the length of timesteps.
     :return: a tensor of shape [batch_size, 1, ...] where the shape has K dims.
     """
-    res = th.from_numpy(arr).to(device=timesteps.device)[timesteps].float()
+    res = th.from_numpy(arr.astype(np.float32)).to(device=timesteps.device)[timesteps].float()
     while len(res.shape) < len(broadcast_shape):
         res = res[..., None]
     return res.expand(broadcast_shape)

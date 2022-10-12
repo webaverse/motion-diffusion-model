@@ -23,6 +23,8 @@ parser.add_argument('--num_smplify_iters', type=int, default=100,
                     help='num of smplify iters')
 parser.add_argument('--cuda', type=bool, default=False,
                     help='enables cuda')
+parser.add_argument('--mps', type=bool, default=True,
+                    help='enables mps')
 parser.add_argument('--gpu_ids', type=int, default=0,
                     help='choose gpu ids')
 parser.add_argument('--num_joints', type=int, default=22,
@@ -41,7 +43,7 @@ opt = parser.parse_args()
 print(opt)
 
 # ---load predefined something
-device = torch.device("cuda:" + str(opt.gpu_ids) if opt.cuda else "cpu")
+device = torch.device("cuda:" + str(opt.gpu_ids) if opt.cuda else "mps" if opt.mps else "cpu")
 print(config.SMPL_MODEL_DIR)
 smplmodel = smplx.create(config.SMPL_MODEL_DIR, 
                          model_type="smpl", gender="neutral", ext="pkl",

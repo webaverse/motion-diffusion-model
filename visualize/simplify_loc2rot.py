@@ -12,8 +12,8 @@ import argparse
 
 class joints2smpl:
 
-    def __init__(self, num_frames, device_id, cuda=True):
-        self.device = torch.device("cuda:" + str(device_id) if cuda else "cpu")
+    def __init__(self, num_frames, device_id, cuda=True, mps=False):
+        self.device = torch.device("cuda:" + str(device_id) if cuda else 'mps' if mps else 'cpu')
         # self.device = torch.device("cpu")
         self.batch_size = num_frames
         self.num_joints = 22  # for HumanML3D
@@ -117,11 +117,12 @@ class joints2smpl:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_path", type=str, required=True, help='Blender file or dir with blender files')
-    parser.add_argument("--cuda", type=bool, default=True, help='')
+    parser.add_argument("--cuda", type=bool, default=False, help='')
+    parser.add_argument("--mps", type=bool, default=True, help='')
     parser.add_argument("--device", type=int, default=0, help='')
     params = parser.parse_args()
 
-    simplify = joints2smpl(device_id=params.device, cuda=params.cuda)
+    simplify = joints2smpl(device_id=params.device, cuda=params.cuda, mps=params.mps)
 
     if os.path.isfile(params.input_path) and params.input_path.endswith('.npy'):
         simplify.npy2smpl(params.input_path)

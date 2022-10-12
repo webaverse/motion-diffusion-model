@@ -6,7 +6,7 @@ import torch
 from visualize.simplify_loc2rot import joints2smpl
 
 class npy2obj:
-    def __init__(self, npy_path, sample_idx, rep_idx, device=0, cuda=True):
+    def __init__(self, npy_path, sample_idx, rep_idx, device=0, cuda=True, mps=False):
         self.npy_path = npy_path
         self.motions = np.load(self.npy_path, allow_pickle=True)
         if self.npy_path.endswith('.npz'):
@@ -21,7 +21,7 @@ class npy2obj:
         self.rep_idx = rep_idx
         self.absl_idx = self.rep_idx*self.total_num_samples + self.sample_idx
         self.num_frames = self.motions['motion'][self.absl_idx].shape[-1]
-        self.j2s = joints2smpl(num_frames=self.num_frames, device_id=device, cuda=cuda)
+        self.j2s = joints2smpl(num_frames=self.num_frames, device_id=device, cuda=cuda, mps=mps)
 
         if self.nfeats == 3:
             print(f'Running SMPLify For sample [{sample_idx}], repetition [{rep_idx}], it may take a few minutes.')

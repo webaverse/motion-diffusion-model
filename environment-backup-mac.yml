@@ -1,0 +1,20 @@
+name: mdm
+channels:
+  - pytorch-nightly
+  - conda-forge
+  - defaults
+dependencies:
+  - pytorch
+  - torchvision
+  - spacy
+  - gdown
+  - scipy
+  - matplotlib
+  - trimesh
+  - h5py
+  pip:
+    - smplx
+    - chumpy
+
+
+prefix: /disk2/guytevet/anaconda3/envs/mdm-venv
