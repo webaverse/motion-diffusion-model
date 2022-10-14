@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+dataset/HumanML3/
+dataset/HumanML3D/
+results/
+save/
+body_models/

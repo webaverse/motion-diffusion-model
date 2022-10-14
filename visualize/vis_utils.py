@@ -64,3 +64,22 @@ class npy2obj:
             'length': self.real_num_frames,
         }
         np.save(save_path, data_dict)
+        import utils.rotation_conversions as geometry
+        i = range(self.real_num_frames)
+        poses_raw = []
+        latest = None
+        for idx, x in np.ndenumerate(np.array(torch.flatten(geometry.matrix_to_axis_angle(geometry.rotation_6d_to_matrix(torch.tensor(self.motions['motion'][0, :-1, :, i])))))):
+            poses_raw.append(x)
+            latest = x
+        smpl_poses = np.array(poses_raw).reshape(self.real_num_frames, 72)
+        trans_raw = []
+        latest = None
+        for idx, x in np.ndenumerate(self.motions['motion'][0, -1, :3, i]):   
+            trans_raw.append(x)
+            latest = x
+        smpl_trans = np.array(trans_raw).reshape(self.real_num_frames, 3)*np.array([100, 1, 100])     
+
+        data_dict2 = {'smpl_poses': smpl_poses,'smpl_trans': smpl_trans,}
+        import pickle
+        with open(save_path +".pkl", 'wb') as pickle_file:
+            pickle.dump(data_dict2, pickle_file)     
