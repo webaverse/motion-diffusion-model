@@ -1,2 +1,15 @@
 #!/bin/bash
-python -m sample --model_path ./save/humanml_trans_enc_512/model000475000.pt --num_repetitions 1 --text_prompt "$1"
+# check if conda is installed
+if ! command -v conda &> /dev/null
+then
+    echo "conda could not be found"
+    exit
+fi
+
+# ./fbx202001_fbxpythonsdk_linux .
+
+# conda env create
+# conda env update -n mdm -f environment.yml
+# conda activate mdm
+    
+python3 server.py
