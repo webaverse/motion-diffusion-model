@@ -1,3 +1,8 @@
+echo "Updating APT"
+sudo apt update
+echo "Installing FFMPEG"
+sudo apt install ffmpeg zip unzip
+
 echo "Installing Anaconda."
 echo "***** IMPORTANT *******"
 echo "*** Please follow the prompts to install."
