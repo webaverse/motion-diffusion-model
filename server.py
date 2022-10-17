@@ -1,10 +1,11 @@
+import os
 from flask import Flask, request, send_file
 import torch
-from converter.convert import convert
 from data_loaders.get_data import get_dataset_loader
 from sampler import run
 from utils.model_util import create_model_and_diffusion, load_model_wo_clip
 from visualizer import convertToObj
+from flask_cors import CORS
 
 model_path = "./save/humanml_trans_enc_512/model000200000.pt"
 
@@ -23,6 +24,7 @@ class dataArgs:
         self.lambda_fc = data['lambda_fc']
 
 app = Flask(__name__)
+CORS(app)
 model = None
 diffusion = None
 state_dict = None
@@ -53,12 +55,13 @@ def load_model():
 @app.route('/generate', methods=['GET'])
 def generate():
     s = request.args.get("s")
+    gender = request.args.get("gender")
     path = run(s, model, diffusion, state_dict, data)
     basePath = path
     convertToObj(path + "/sample00_rep00.mp4")
     path += "/sample00_rep00_smpl_params.npy.pkl"
-    convert(path, basePath)
-    basePath += "/output.fbx"
+    basePath += "/output.glb"
+    os.system("python fbx_output.py --input \"" + path + "\" --output \"" + basePath + "\" --fps_source 30 --fps_target 30 --gender " + gender + " --person_id 0")
 
     response = send_file(basePath, download_name="output.fbx", mimetype="application/octet-stream")
     response.headers["Access-Control-Allow-Origin"] = "*"
