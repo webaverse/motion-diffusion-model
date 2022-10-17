@@ -32,12 +32,20 @@ import time
 import joblib
 import argparse
 import numpy as np
+import addon_utils
 from math import radians
-from mathutils import Matrix, Vector, Quaternion
+from mathutils import Matrix, Vector, Quaternion, Euler
 
 # Globals
-male_model_path = './fbx/SMPL_m_unityDoubleBlends_lbs_10_scale5_207_v1.0.0.fbx'
-female_model_path = './fbx/SMPL_f_unityDoubleBlends_lbs_10_scale5_207_v1.0.0.fbx'
+male_model_path = 'fbx/SMPL_m_unityDoubleBlends_lbs_10_scale5_207_v1.0.0.fbx'
+female_model_path = 'fbx/SMPL_f_unityDoubleBlends_lbs_10_scale5_207_v1.0.0.fbx'
+
+fps_source = 30
+fps_target = 30
+
+gender = 'male'
+
+start_origin = 1
 
 bone_name_from_index = {
     0 : 'Pelvis',
@@ -243,18 +251,43 @@ def export_animated_mesh(output_path):
 
     return
 
-def outputFbx(path, outPath, _gender = "male", startOrigin = 1):
+
+if __name__ == '__main__':
     try:
-        input_path = path
-        output_path = outPath
-        print('input_path:', input_path, "output_path", output_path)
+        if bpy.app.background:
 
-        fps_source = 30
-        fps_target = 30
+            parser = argparse.ArgumentParser(description='Create keyframed animated skinned SMPL mesh from VIBE output')
+            parser.add_argument('--input', dest='input_path', type=str, required=True,
+                                help='Input file or directory')
+            parser.add_argument('--output', dest='output_path', type=str, required=True,
+                                help='Output file or directory')
+            parser.add_argument('--fps_source', type=int, default=fps_source,
+                                help='Source framerate')
+            parser.add_argument('--fps_target', type=int, default=fps_target,
+                                help='Target framerate')
+            parser.add_argument('--gender', type=str, default=gender,
+                                help='Always use specified gender')
+            parser.add_argument('--start_origin', type=int, default=start_origin,
+                                help='Start animation centered above origin')
+            parser.add_argument('--person_id', type=int, default=1,
+                                help='Detected person ID to use for fbx animation')
 
-        gender = _gender
+            args = parser.parse_args()
 
-        start_origin = startOrigin
+            input_path = args.input_path
+            output_path = args.output_path
+
+            if not os.path.exists(input_path):
+                print('ERROR: Invalid input path')
+                sys.exit(1)
+
+            fps_source = args.fps_source
+            fps_target = args.fps_target
+
+            gender = args.gender
+
+            start_origin = args.start_origin
+            print("----", start_origin)
 
         # end if bpy.app.background
 
@@ -289,7 +322,7 @@ def outputFbx(path, outPath, _gender = "male", startOrigin = 1):
                 fps_source=fps_source,
                 fps_target=fps_target,
                 start_origin=start_origin,
-                person_id=0
+                person_id=args.person_id
             )
             export_animated_mesh(output_path)
 
