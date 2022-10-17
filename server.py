@@ -1,7 +1,7 @@
 from flask import Flask, request, send_file
 import torch
-from converter.convert import convert
 from data_loaders.get_data import get_dataset_loader
+from fbx_output import outputFbx
 from sampler import run
 from utils.model_util import create_model_and_diffusion, load_model_wo_clip
 from visualizer import convertToObj
@@ -57,8 +57,8 @@ def generate():
     basePath = path
     convertToObj(path + "/sample00_rep00.mp4")
     path += "/sample00_rep00_smpl_params.npy.pkl"
-    convert(path, basePath)
     basePath += "/output.fbx"
+    outputFbx(path, basePath)
 
     response = send_file(basePath, download_name="output.fbx", mimetype="application/octet-stream")
     response.headers["Access-Control-Allow-Origin"] = "*"
