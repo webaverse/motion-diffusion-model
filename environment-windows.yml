@@ -116,4 +116,7 @@ dependencies:
     - wasabi==0.10.1
     - wcwidth==0.2.5
     - flask
+    - bpy
+    - mathutils
+    - flask-cors
 prefix: /disk2/guytevet/anaconda3/envs/mdm-venv

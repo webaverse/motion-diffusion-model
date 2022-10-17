@@ -5,6 +5,7 @@ from data_loaders.get_data import get_dataset_loader
 from sampler import run
 from utils.model_util import create_model_and_diffusion, load_model_wo_clip
 from visualizer import convertToObj
+from flask_cors import CORS
 
 model_path = "./save/humanml_trans_enc_512/model000200000.pt"
 
@@ -23,6 +24,7 @@ class dataArgs:
         self.lambda_fc = data['lambda_fc']
 
 app = Flask(__name__)
+CORS(app)
 model = None
 diffusion = None
 state_dict = None

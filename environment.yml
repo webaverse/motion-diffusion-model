@@ -134,4 +134,5 @@ dependencies:
     - flask
     - bpy
     - mathutils
+    - flask-cors
 prefix: /disk2/guytevet/anaconda3/envs/mdm-venv
