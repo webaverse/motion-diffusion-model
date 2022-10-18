@@ -1,11 +1,13 @@
 import os
-from flask import Flask, request, send_file
+from time import time
 import torch
 from data_loaders.get_data import get_dataset_loader
 from sampler import run
 from utils.model_util import create_model_and_diffusion, load_model_wo_clip
 from visualizer import convertToObj
-from flask_cors import CORS
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 model_path = "./save/humanml_trans_enc_512/model000200000.pt"
 
@@ -23,19 +25,15 @@ class dataArgs:
         self.lambda_rcxyz = data['lambda_rcxyz']
         self.lambda_fc = data['lambda_fc']
 
-app = Flask(__name__)
-CORS(app)
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*']
+)
 model = None
 diffusion = None
 state_dict = None
 data = None
-
-def mkResponse(data):
-  return send_file(
-    data,
-    download_name="image.png",
-    mimetype="image/png",
-  )
 
 def load_model():
     global model, diffusion, state_dict, data
@@ -52,23 +50,28 @@ def load_model():
                                 hml_mode='text_only')
     data.fixed_length = 120
 
-@app.route('/generate', methods=['GET'])
-def generate():
-    s = request.args.get("s")
-    gender = request.args.get("gender")
+@app.get("/generate")
+def generate(s: str, gender: str, isGLTF: str):
+    start_time = time()
+    print(isGLTF)
+    isGLTF = isGLTF == "true"
+    extention = ".fbx"
+    if isGLTF:
+      extention = ".glb"
+    
+    print(extention, isGLTF)
     path = run(s, model, diffusion, state_dict, data)
     basePath = path
     convertToObj(path + "/sample00_rep00.mp4")
     path += "/sample00_rep00_smpl_params.npy.pkl"
-    basePath += "/output.glb"
+    basePath += "/output" + extention
     os.system("python fbx_output.py --input \"" + path + "\" --output \"" + basePath + "\" --fps_source 30 --fps_target 30 --gender " + gender + " --person_id 0")
 
-    response = send_file(basePath, download_name="output.fbx", mimetype="application/octet-stream")
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "*"
-    return response
+    print("--- %s seconds ---" % (time() - start_time))
+    print(basePath, "output" + extention, extention, isGLTF)
+    return FileResponse(basePath, filename="output" + extention)
 
 if __name__ == '__main__':
     load_model()
-    app.run(host="0.0.0.0", port=7777)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=7777, log_level="debug")
