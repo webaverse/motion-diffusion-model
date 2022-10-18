@@ -4,38 +4,19 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/human-motion-diffusion-model/motion-synthesis-on-humanml3d)](https://paperswithcode.com/sota/motion-synthesis-on-humanml3d?p=human-motion-diffusion-model)
 [![arXiv](https://img.shields.io/badge/arXiv-<2209.14916>-<COLOR>.svg)](https://arxiv.org/abs/2209.14916)
 
-The official PyTorch implementation of the paper [**"Human Motion Diffusion Model"**](https://arxiv.org/abs/2209.14916).
+Fork of the PyTorch implementation of the paper [**"Human Motion Diffusion Model"**](https://arxiv.org/abs/2209.14916).
+This fork is ment to add support for the apple silicon mps 
 
-Please visit our [**webpage**](https://guytevet.github.io/mdm-page/) for more details.
+Please visit the official [**webpage**](https://guytevet.github.io/mdm-page/) and [**github**](https://github.com/GuyTevet/motion-diffusion-model) for more details.
 
 ![teaser](https://github.com/GuyTevet/mdm-page/raw/main/static/figures/github.gif)
 
-#### Bibtex
-If you find this code useful in your research, please cite:
-
-```
-@article{tevet2022human,
-  title={Human Motion Diffusion Model},
-  author={Tevet, Guy and Raab, Sigal and Gordon, Brian and Shafir, Yonatan and Bermano, Amit H and Cohen-Or, Daniel},
-  journal={arXiv preprint arXiv:2209.14916},
-  year={2022}
-}
-```
-
-## News
-
-📢 **9/Oct/22** - Added training and evaluation scripts. 
-  Note slight env changes adapting to the new code. If you already have an installed environment, run `bash prepare/download_glove.sh; pip install clearml` to adapt.
-
-📢 **6/Oct/22** - First release - sampling and rendering using pre-trained models.
 
 ## Getting started
 
-This code was tested on `Ubuntu 18.04.5 LTS` and requires:
+This code was tested on a `M1 Macbook Pro` and requires:
 
-* Python 3.7
 * conda3 or miniconda3
-* CUDA capable GPU (one is enough)
 
 Note: AWS Ubuntu image that works is `amazon/Deep Learning AMI (Ubuntu 18.04) Version 64.4`
 
@@ -51,11 +32,13 @@ For windows use [this](https://www.geeksforgeeks.org/how-to-install-ffmpeg-on-wi
 
 Setup conda env:
 ```shell
-conda env create -f environment.yml
+conda env create -f environment-mac.yml
 conda activate mdm
 python -m spacy download en_core_web_sm
-pip install git+https://github.com/openai/CLIP.git
+python -m pip install git+https://github.com/openai/CLIP.git
 ```
+
+If the `environment-mac.yml` fails you can try the `environment-backup-mac.yml`.
 
 Download dependencies:
 
@@ -217,12 +200,12 @@ python -m eval.eval_humanml --model_path ./save/kit_trans_enc_512/model000400000
 
 ## Acknowledgments
 
-This code is standing on the shoulders of giants. We want to thank the following contributors
-that our code is based on:
+Acknowledgments of the original creators:
+
+This code is standing on the shoulders of giants. We want to thank the following contributors that our code is based on:
 
 [guided-diffusion](https://github.com/openai/guided-diffusion), [MotionCLIP](https://github.com/GuyTevet/MotionCLIP), [text-to-motion](https://github.com/EricGuo5513/text-to-motion), [actor](https://github.com/Mathux/ACTOR), [joints2smpl](https://github.com/wangsen1312/joints2smpl).
-
 ## License
-This code is distributed under an [MIT LICENSE](LICENSE).
+This code is distributed under an [MIT LICENSE](LICENSE) as is the original.
 
 Note that our code depends on other libraries, including CLIP, SMPL, SMPL-X, PyTorch3D, and uses datasets that each have their own respective licenses that must also be followed.

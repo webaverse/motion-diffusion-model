@@ -1,4 +1,14 @@
 # Byte-compiled / optimized / DLL files
+
+# Mac
+.DS_Store
+
+# Datasets and models
+body_models/
+glove/
+save/
+dataset/HumanML3D
+
 __pycache__/
 *.py[cod]
 *$py.class

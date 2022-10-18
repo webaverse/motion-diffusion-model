@@ -52,7 +52,7 @@ class SMPLify3D():
                  use_collision=False,
                  use_lbfgs=True,
                  joints_category="orig",
-                 device=torch.device('cuda:0'),
+                 device=torch.device('mps'),
                  ):
 
         # Store options

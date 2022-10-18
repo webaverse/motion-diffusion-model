@@ -73,7 +73,9 @@ class TrainLoop:
             # being specified at the command line.
 
         self.device = torch.device("cpu")
-        if torch.cuda.is_available() and dist_util.dev() != 'cpu':
+        if torch.cuda.is_available() and dist_util.dev() == 'cuda':
+            self.device = torch.device(dist_util.dev())
+        if torch.backends.mps.is_available() and dist_util.dev() == 'mps':
             self.device = torch.device(dist_util.dev())
 
         self.schedule_sampler_type = 'uniform'

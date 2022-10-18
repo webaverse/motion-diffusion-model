@@ -48,6 +48,8 @@ def dev():
     global used_device
     if th.cuda.is_available() and used_device>=0:
         return th.device(f"cuda:{used_device}")
+    elif th.backends.mps.is_available():
+        return th.device('mps')
     return th.device("cpu")
 
 
