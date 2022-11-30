@@ -25,9 +25,5 @@ if __name__ == '__main__':
     npy2obj = vis_utils.npy2obj(npy_path, sample_i, rep_i,
                                 device=params.device, cuda=params.cuda)
 
-    print('Saving obj files to [{}]'.format(os.path.abspath(results_dir)))
-    for frame_i in tqdm(range(npy2obj.real_num_frames)):
-        npy2obj.save_obj(os.path.join(results_dir, 'frame{:03d}.obj'.format(frame_i)), frame_i)
-
     print('Saving SMPL params to [{}]'.format(os.path.abspath(out_npy_path)))
     npy2obj.save_npy(out_npy_path)

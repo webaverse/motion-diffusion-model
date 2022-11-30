@@ -18,7 +18,7 @@ class joints2smpl:
         self.batch_size = num_frames
         self.num_joints = 22  # for HumanML3D
         self.joint_category = "AMASS"
-        self.num_smplify_iters = 150
+        self.num_smplify_iters = 5
         self.fix_foot = False
         print(config.SMPL_MODEL_DIR)
         smplmodel = smplx.create(config.SMPL_MODEL_DIR,
@@ -52,7 +52,6 @@ class joints2smpl:
             thetas, _ = self.joint2smpl(motions['motion'][sample_i].transpose(2, 0, 1))  # [nframes, njoints, 3]
             all_thetas.append(thetas.cpu().numpy())
         motions['motion'] = np.concatenate(all_thetas, axis=0)
-        print('motions', motions['motion'].shape)
 
         print(f'Saving [{out_path}]')
         np.save(out_path, motions)
@@ -66,10 +65,6 @@ class joints2smpl:
         pred_betas = torch.zeros(self.batch_size, 10).to(self.device)
         pred_cam_t = torch.zeros(self.batch_size, 3).to(self.device)
         keypoints_3d = torch.zeros(self.batch_size, self.num_joints, 3).to(self.device)
-
-        # run the whole seqs
-        num_seqs = input_joints.shape[0]
-
 
         # joints3d = input_joints[idx]  # *1.2 #scale problem [check first]
         keypoints_3d = torch.Tensor(input_joints).to(self.device).float()
@@ -110,7 +105,7 @@ class joints2smpl:
         root_loc = torch.tensor(keypoints_3d[:, 0])  # [bs, 3]
         root_loc = torch.cat([root_loc, torch.zeros_like(root_loc)], dim=-1).unsqueeze(1)  # [bs, 1, 6]
         thetas = torch.cat([thetas, root_loc], dim=1).unsqueeze(0).permute(0, 2, 3, 1)  # [1, 25, 6, 196]
-
+ 
         return thetas.clone().detach(), {'pose': new_opt_joints[0, :24].flatten().clone().detach(), 'betas': new_opt_betas.clone().detach(), 'cam': new_opt_cam_t.clone().detach()}
 
 
